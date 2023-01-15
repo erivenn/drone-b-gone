@@ -7,14 +7,8 @@ const naughty = require('./Naughty')
 
 app.use(cors())
 app.use(express.json())
+app.use(express.static('build'))
 
-// if (process.argv.length < 3) {
-//   console.log('Usage: node index.js user password')
-//   process.exit(1)
-// }
-
-//const user = process.argv[2]
-//const password = process.argv[3]
 const url = process.env.MONGODB_URI
 
 const pilotSchema = new mongoose.Schema({
@@ -35,7 +29,7 @@ const Pilot = mongoose.model('Pilot', pilotSchema)
 
 mongoose.connect(url)
 .then((response) => {
-  console.log('connected to MongoDB')
+  //console.log('connected to MongoDB')
   const savePilot = async () => {
   
     const pilotlist = await naughty.zipNaughty()
@@ -56,10 +50,10 @@ mongoose.connect(url)
           distance: p.distance
         }) 
         await pilot.save()
-        console.log('drone saved!')
+        //console.log('drone saved!')
       } else if (foundpilot.distance > p.distance) {
           await foundpilot.updateOne({distance: p.distance})
-          console.log('distance updated')
+          //console.log('distance updated')
       }
     }))
   }
@@ -68,12 +62,13 @@ mongoose.connect(url)
 .catch ((err) =>
   console.log('error connecting to MongoDB:' + err)
 )
-app.get('/', async (request, response) => {
+
+app.get('/pilots', async (request, response) => {
   const retrievedb = await Pilot.find({})
   response.send(retrievedb)
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })

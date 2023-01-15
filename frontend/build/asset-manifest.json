@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/static/css/main.1556db1b.css",
+    "main.js": "/static/js/main.19f6ac0f.js",
+    "static/media/rfslogo.png": "/static/media/rfslogo.d77978a547874e00bd16.png",
+    "index.html": "/index.html",
+    "main.1556db1b.css.map": "/static/css/main.1556db1b.css.map",
+    "main.19f6ac0f.js.map": "/static/js/main.19f6ac0f.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.1556db1b.css",
+    "static/js/main.19f6ac0f.js"
+  ]
+}

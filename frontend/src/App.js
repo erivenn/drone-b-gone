@@ -4,7 +4,7 @@ import DisplayPilots from './components/DisplayPilots'
 import './App.css'
 import logo from './rfslogo.png'
 
-const url = 'http://localhost:3001'
+const url = '/pilots'
 
 const App = () => {
   const [pilots, setPilots] = useState([])
@@ -26,7 +26,7 @@ const App = () => {
   return (
     <div>
       <div id="top">
-        <h1>Recent NDZ violations</h1>
+        <h1 style={{color: 'teal'}}>Recent NDZ violations</h1>
         <p>Drones owned by the following individuals were detected within 100m of a protected nesting area in the past 10 minutes.</p>
       </div>
       <div id="list">
