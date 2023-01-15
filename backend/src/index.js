@@ -12,7 +12,7 @@ app.use(express.static('build'))
 const url = process.env.MONGODB_URI
 
 const pilotSchema = new mongoose.Schema({
-  id: String,
+  pilotid: String,
   timestamp: Date,
   firstname: String,
   lastname: String,
@@ -27,18 +27,18 @@ pilotSchema.path('timestamp').index({ expires: '600s' });
 
 const Pilot = mongoose.model('Pilot', pilotSchema)
 
-mongoose.connect(url)
+const intid = mongoose.connect(url)
 .then((response) => {
-  //console.log('connected to MongoDB')
+  console.log('connected to MongoDB')
   const savePilot = async () => {
   
     const pilotlist = await naughty.zipNaughty()
     
     await Promise.all(pilotlist.map( async (p) => {
-      const foundpilot = await Pilot.findOne({ id: p.pilotId })
+      const foundpilot = await Pilot.findOne({ pilotid: p.pilotId })
       if (!foundpilot) {
         const pilot = new Pilot({
-          id: p.pilotId,
+          pilotid: p.pilotId,
           timestamp: p.timestamp,
           firstname: p.firstName,
           lastname: p.lastName,
@@ -50,14 +50,18 @@ mongoose.connect(url)
           distance: p.distance
         }) 
         await pilot.save()
-        //console.log('drone saved!')
-      } else if (foundpilot.distance > p.distance) {
+        console.log('drone saved!')
+      } else {
+        if (foundpilot.distance > p.distance) {
           await foundpilot.updateOne({distance: p.distance})
-          //console.log('distance updated')
+          console.log('distance updated')
+        }
+        await foundpilot.updateOne({timestamp: p.timestamp})
       }
     }))
   }
-  setInterval(() => savePilot(), 2000)
+  const intid = setInterval(async () => await savePilot(), 2000)
+  return intid
 })
 .catch ((err) =>
   console.log('error connecting to MongoDB:' + err)
@@ -72,3 +76,42 @@ const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
+
+const exitHandler = () => {
+   intid.then(intid => {
+    clearInterval(intid)
+    process.exit()
+   })
+}
+
+// Object to capture process exits and call app specific cleanup function
+
+function noOp() {}
+
+const cleanup = function cleanup(callback) {
+  // attach user callback to the process event emitter
+  // if no callback, it will still exit gracefully on Ctrl-C
+  callback = callback || noOp
+  process.on('cleanup',callback)
+
+  // do app specific cleaning before exiting
+  process.on('exit', function () {
+    process.emit('cleanup')
+    console.log('cleanup')
+  })
+
+  // catch ctrl+c event and exit normally
+  process.on('SIGINT', function () {
+    console.log('Ctrl-C...')
+    process.exit(2)
+  })
+
+  //catch uncaught exceptions, trace, then exit normally
+  process.on('uncaughtException', function(e) {
+    console.log('Uncaught Exception...')
+    console.log(e.stack)
+    process.exit(99)
+  })
+}
+
+cleanup(exitHandler)
