@@ -1,6 +1,6 @@
 # drone-b-gone
 
-This app has been submitted for Reaktor's summer trainee assignment. Errors may occur as I made it on a very short notice and between uni deadline.
+This app has been submitted for Reaktor's summer trainee assignment. Errors may occur as I made it on a very short notice and between uni deadlines.
 Note that this is the full version of the code, warts and all, which includes error logs (currently commented out) and everything else an evaluator may need to see how development of the app went.
 
 ## What does it do?
