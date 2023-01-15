@@ -3,6 +3,8 @@
 This app has been submitted for Reaktor's summer trainee assignment. Errors may occur as I made it on a very short notice and between uni deadlines.
 Note that this is the full version of the code, warts and all, which includes error logs (currently commented out) and everything else an evaluator may need to see how development of the app went.
 
+The build version of the app deployed to Render can be found at https://dronebgone.onrender.com
+
 ## What does it do?
 
 It's a single page application displaying (fictional) names of pilots whose drones violated a (fictional) 100x100m protected area around an endangered bird's nest.
